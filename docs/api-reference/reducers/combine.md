@@ -3,7 +3,7 @@
 ### Table of Contents
 
 -   [combinedUpdaters][1]
-    -   [addDataToMapUpdater][3]
+    -   [Dataset][3]
 
 ## combinedUpdaters
 
@@ -49,45 +49,33 @@ const composedReducer = (state, action) => {
 export default composedReducer;
 ```
 
-### addDataToMapUpdater
+### Dataset
 
 Combine data and full configuration update in a single action
 
--   **Action**: [`addDataToMap`][6]
+Type: [Object][6]
 
 **Parameters**
 
--   `state` **[Object][7]** kepler.gl instance state, containing all subreducer state
--   `action` **[Object][7]** 
-    -   `action.payload` **[Object][7]** `{datasets, options, config}`
-        -   `action.payload.datasets` **([Array][8]&lt;[Object][7]> | [Object][7])** **\*required** datasets can be a dataset or an array of datasets
+-   `state` **[Object][6]** kepler.gl instance state, containing all subreducer state
+-   `action` **[Object][6]** 
+    -   `action.payload` **[Object][6]** `{datasets, options, config}`
+        -   `action.payload.datasets`  **\*required** datasets can be a dataset or an array of datasets
             Each dataset object needs to have `info` and `data` property.
-            -   `action.payload.datasets.info` **[Object][7]** \-info of a dataset
-                -   `action.payload.datasets.info.id` **[string][9]** id of this dataset. If config is defined, `id` should matches the `dataId` in config.
-                -   `action.payload.datasets.info.label` **[string][9]** A display name of this dataset
-            -   `action.payload.datasets.data` **[Object][7]** **\*required** The data object, in a tabular format with 2 properties `fields` and `rows`
-                -   `action.payload.datasets.data.fields` **[Array][8]&lt;[Object][7]>** **\*required** Array of fields,
-                    -   `action.payload.datasets.data.fields.name` **[string][9]** **\*required** Name of the field,
-                -   `action.payload.datasets.data.rows` **[Array][8]&lt;[Array][8]>** **\*required** Array of rows, in a tabular format with `fields` and `rows`
-        -   `action.payload.options` **[Object][7]** option object `{centerMap: true}`
-        -   `action.payload.config` **[Object][7]** map config
+        -   `action.payload.options`  option object `{centerMap: true}`
+        -   `action.payload.config`  map config
+        -   `action.payload.info`  map info contains title and description
 
-Returns **[Object][7]** nextState
+Returns **any** nextState
 
 [1]: #combinedupdaters
 
 [2]: #examples
 
-[3]: #adddatatomapupdater
+[3]: #dataset
 
 [4]: #parameters
 
 [5]: ../advanced-usage/using-updaters.md
 
-[6]: ../actions/actions.md#adddatatomap
-
-[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
-
-[8]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
-
-[9]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object

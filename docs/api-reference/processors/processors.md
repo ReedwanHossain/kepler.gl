@@ -15,8 +15,8 @@ Assign `type`, `tableFieldIndex` and `format` (timestamp only) to each field
 
 **Parameters**
 
--   `data` **[Array][16]&lt;[Object][17]>** array of row object
--   `fieldOrder` **[Array][16]** array of field names as string
+-   `data`  array of row object
+-   `fieldOrder`  array of field names as string
 
 **Examples**
 
@@ -52,16 +52,17 @@ const fields = getFieldsFromData(data, fieldOrder);
 // {name: 'zeroOnes', format: '', tableFieldIndex: 7, type: 'integer'}];
 ```
 
-Returns **[Array][16]&lt;[Object][17]>** formatted fields
+Returns **any** formatted fields
 
 ## processCsvData
 
 Process csv data, output a data object with `{fields: [], rows: []}`.
-The data object can be wrapped in a `dataset` and pass to [`addDataToMap`][18]
+The data object can be wrapped in a `dataset` and pass to [`addDataToMap`][16]
 
 **Parameters**
 
--   `rawData` **[string][19]** raw csv string
+-   `rawData`  raw csv string
+-   `header`  
 
 **Examples**
 
@@ -85,17 +86,17 @@ dispatch(addDataToMap({
 }));
 ```
 
-Returns **[Object][17]** data object `{fields: [], rows: []}`
+Returns **any** data object `{fields: [], rows: []}` can be passed to addDataToMaps
 
 ## processGeojson
 
-Process GeoJSON [`FeatureCollection`][20],
+Process GeoJSON [`FeatureCollection`][17],
 output a data object with `{fields: [], rows: []}`.
-The data object can be wrapped in a `dataset` and pass to [`addDataToMap`][18]
+The data object can be wrapped in a `dataset` and pass to [`addDataToMap`][16]
 
 **Parameters**
 
--   `rawData` **[Object][17]** raw geojson feature collection
+-   `rawData`  raw geojson feature collection
 
 **Examples**
 
@@ -129,18 +130,18 @@ dispatch(addDataToMap({
 }));
 ```
 
-Returns **[Object][17]** dataset containing `fields` and `rows`
+Returns **any** dataset containing `fields` and `rows`
 
 ## processKeplerglJSON
 
-Process saved kepler.gl json to be pass to [`addDataToMap`][18].
+Process saved kepler.gl json to be pass to [`addDataToMap`][16].
 The json object should contain `datasets` and `config`.
 
 **Parameters**
 
--   `rawData` **[Object][17]** 
-    -   `rawData.datasets` **[Array][16]** 
-    -   `rawData.config` **[Object][17]** 
+-   `rawData` **[Object][18]** 
+    -   `rawData.datasets` **[Array][19]** 
+    -   `rawData.config` **[Object][18]** 
 
 **Examples**
 
@@ -151,15 +152,15 @@ import {processKeplerglJSON} from 'kepler.gl/processors';
 dispatch(addDataToMap(processKeplerglJSON(keplerGlJson)));
 ```
 
-Returns **[Object][17]** datasets and config `{datasets: {}, config: {}}`
+Returns **[Object][18]** datasets and config `{datasets: {}, config: {}}`
 
 ## processRowObject
 
-Process data where each row is an object, output can be passed to [`addDataToMap`][18]
+Process data where each row is an object, output can be passed to [`addDataToMap`][16]
 
 **Parameters**
 
--   `rawData` **[Array][16]&lt;[Object][17]>** an array of row object, each object should have the same number of keys
+-   `rawData`  an array of row object, each object should have the same number of keys
 
 **Examples**
 
@@ -180,7 +181,7 @@ dispatch(addDataToMap({
 }));
 ```
 
-Returns **[Object][17]** dataset containing `fields` and `rows`
+Returns **any** dataset containing `fields` and `rows`
 
 [1]: #getfieldsfromdata
 
@@ -212,12 +213,10 @@ Returns **[Object][17]** dataset containing `fields` and `rows`
 
 [15]: #examples-4
 
-[16]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[16]: ../actions/actions.md#adddatatomap
 
-[17]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[17]: http://wiki.geojson.org/GeoJSON_draft_version_6#FeatureCollection
 
-[18]: ../actions/actions.md#adddatatomap
+[18]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[19]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-
-[20]: http://wiki.geojson.org/GeoJSON_draft_version_6#FeatureCollection
+[19]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array

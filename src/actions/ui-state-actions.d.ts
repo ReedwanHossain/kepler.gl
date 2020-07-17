@@ -99,8 +99,8 @@ export function setExportImageSetting(newSetting: {
   legend?: string;
 }): Merge<SetExportImageSettingUpdaterAction, {type: ActionTypes.SET_EXPORT_IMAGE_SETTING}>;
 
-/** START_EXPORTING_IMAGE */
-export function startExportingImage(): {type: ActionTypes.START_EXPORTING_IMAGE};
+/** SET_EXPORTING_IMAGE */
+export function setExportingImage(): {type: ActionTypes.START_EXPORTING_IMAGE};
 
 /** SET_EXPORT_IMAGE_DATA_URI */
 export type SetExportImageDataUriUpdaterAction = {

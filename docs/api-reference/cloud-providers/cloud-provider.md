@@ -26,7 +26,7 @@ The default provider class
 -   `props` **[object][27]** 
     -   `props.name` **[string][28]** 
     -   `props.displayName` **[string][28]** 
-    -   `props.icon` **ReactElement** React element
+    -   `props.icon` **React.Component** React element
     -   `props.thumbnail` **[object][27]** thumbnail size object
         -   `props.thumbnail.width` **[number][29]** thumbnail width in pixels
         -   `props.thumbnail.height` **[number][29]** thumbnail height in pixels
@@ -73,13 +73,13 @@ async downloadMap(loadParams) {
 }
 ```
 
-Returns **[MapResponse][30]** the map object containing dataset config info and format option
+Returns **any** mapResponse - the map object containing dataset config info and format option
 
 ### getAccessToken
 
 This method is called to determine whether user already logged in to this provider
 
-Returns **[boolean][31]** true if a user already logged in
+Returns **[boolean][30]** true if a user already logged in
 
 ### getMapUrl
 
@@ -87,7 +87,7 @@ This method is called by kepler.gl demo app to pushes a new location to history,
 
 **Parameters**
 
--   `fullURL` **[boolean][31]** Whether to return the full url with domain, or just the location (optional, default `true`)
+-   `fullURL` **[boolean][30]** Whether to return the full url with domain, or just the location (optional, default `true`)
 
 Returns **[string][28]** mapUrl
 
@@ -97,7 +97,7 @@ This method is called after user share a map, to display the share url.
 
 **Parameters**
 
--   `fullUrl` **[boolean][31]** Whether to return the full url with domain, or just the location (optional, default `false`)
+-   `fullUrl` **[boolean][30]** Whether to return the full url with domain, or just the location (optional, default `false`)
 
 Returns **[string][28]** shareUrl
 
@@ -111,13 +111,13 @@ Returns **[string][28]** true if a user already logged in
 
 Whether this provider support upload map to a private storage. If truthy, user will be displayed with the storage save icon on the top right of the side bar.
 
-Returns **[boolean][31]** 
+Returns **[boolean][30]** 
 
 ### hasSharingUrl
 
 Whether this provider support share map via a public url, if truthy, user will be displayed with a share map via url under the export map option on the top right of the side bar
 
-Returns **[boolean][31]** 
+Returns **[boolean][30]** 
 
 ### listMaps
 
@@ -141,7 +141,7 @@ async listMaps() {
  }
 ```
 
-Returns **[Array][32]&lt;[Viz][33]>** an array of Viz objects
+Returns **any** visualizations an array of Viz objects
 
 ### login
 
@@ -150,7 +150,7 @@ Upon login success, `onCloudLoginSuccess` has to be called to notify kepler.gl U
 
 **Parameters**
 
--   `onCloudLoginSuccess` **[function][34]** callbacks to be called after login success
+-   `onCloudLoginSuccess` **[function][31]** callbacks to be called after login success
 
 ### logout
 
@@ -159,7 +159,7 @@ Upon login success, `onCloudLoginSuccess` has to be called to notify kepler.gl U
 
 **Parameters**
 
--   `onCloudLogoutSuccess` **[function][34]** callbacks to be called after logout success
+-   `onCloudLogoutSuccess` **[function][31]** callbacks to be called after logout success
 
 ### uploadMap
 
@@ -171,10 +171,10 @@ With the option to overwrite already saved map, and upload as private or public 
 -   `param` **[Object][27]** 
     -   `param.mapData` **[Object][27]** the map object
         -   `param.mapData.map` **[Object][27]** {datasets. config, info: {title, description}}
-        -   `param.mapData.thumbnail` **[Blob][35]** A thumbnail of current map. thumbnail size can be defined by provider by this.thumbnail
-    -   `param.options` **[Object][27]**  (optional, default `{}`)
-        -   `param.options.overwrite` **[boolean][31]** whether user choose to overwrite already saved map under the same name
-        -   `param.options.isPublic` **[boolean][31]** whether user wish to share the map with others. if isPublic is truthy, kepler will call this.getShareUrl() to display an URL they can share with others
+        -   `param.mapData.thumbnail` **[Blob][32]** A thumbnail of current map. thumbnail size can be defined by provider by this.thumbnail
+    -   `param.options` **[object][27]?**  (optional, default `{}`)
+        -   `param.options.overwrite` **[boolean][30]?** whether user choose to overwrite already saved map under the same name
+        -   `param.options.isPublic` **[boolean][30]?** whether user wish to share the map with others. if isPublic is truthy, kepler will call this.getShareUrl() to display an URL they can share with others
 
 ## MapResponse
 
@@ -187,7 +187,7 @@ Type: [Object][27]
 ### Properties
 
 -   `map` **[Object][27]** 
-    -   `map.datasets` **[Array][32]&lt;[Object][27]>** 
+    -   `map.datasets` **[Array][33]&lt;[Object][27]>** 
     -   `map.config` **[Object][27]** 
     -   `map.info` **[Object][27]** 
 -   `format` **[string][28]** one of 'csv': csv file string, 'geojson': geojson object, 'row': row object, 'keplergl': datasets array saved using KeplerGlSchema.save
@@ -203,7 +203,7 @@ Type: [Object][27]
 -   `description` **[string][28]** The description of the map
 -   `imageUrl` **[string][28]** The imageUrl of the map
 -   `lastModification` **[number][29]** An epoch timestamp in milliseconds
--   `privateMap` **[boolean][31]** Optional, whether if this map is private to the user, or can be accessed by others via URL
+-   `privateMap` **[boolean][30]** Optional, whether if this map is private to the user, or can be accessed by others via URL
 -   `loadParams` **any** A property to be passed to `downloadMap`
 
 [1]: #provider
@@ -264,14 +264,10 @@ Type: [Object][27]
 
 [29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[30]: #mapresponse
+[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[32]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[32]: https://developer.mozilla.org/docs/Web/API/Blob
 
-[33]: #viz
-
-[34]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
-
-[35]: https://developer.mozilla.org/docs/Web/API/Blob
+[33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array

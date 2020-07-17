@@ -384,10 +384,10 @@ export const setExportImageSettingUpdater = (state, {payload: newSetting}) => {
  * @memberof uiStateUpdaters
  * @param state `uiState`
  * @returns nextState
- * @type {typeof import('./ui-state-updaters').startExportingImageUpdater}
+ * @type {typeof import('./ui-state-updaters').setExportingImageUpdater}
  * @public
  */
-export const startExportingImageUpdater = state => ({
+export const setExportingImageUpdater = state => ({
   ...state,
   exportImage: {
     ...state.exportImage,

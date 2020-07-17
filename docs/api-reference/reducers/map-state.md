@@ -5,16 +5,16 @@
 -   [mapStateUpdaters][1]
     -   [fitBoundsUpdater][3]
     -   [INITIAL_MAP_STATE][5]
-    -   [receiveMapConfigUpdater][7]
-    -   [resetMapConfigUpdater][9]
-    -   [togglePerspectiveUpdater][11]
-    -   [toggleSplitMapUpdater][13]
-    -   [updateMapUpdater][15]
+    -   [receiveMapConfigUpdater][6]
+    -   [resetMapConfigUpdater][8]
+    -   [togglePerspectiveUpdater][10]
+    -   [toggleSplitMapUpdater][12]
+    -   [updateMapUpdater][14]
 
 ## mapStateUpdaters
 
 Updaters for `mapState` reducer. Can be used in your root reducer to directly modify kepler.gl's state.
-Read more about [Using updaters][17]
+Read more about [Using updaters][16]
 
 **Examples**
 
@@ -53,98 +53,73 @@ export default composedReducer;
 
 Fit map viewport to bounds
 
--   **Action**: [`fitBounds`][18]
+-   **Action**: [`fitBounds`][17]
 
 **Parameters**
 
--   `state` **[Object][19]** 
--   `action` **[Object][19]** 
-    -   `action.payload` **[Array][20]&lt;[number][21]>** bounds as `[lngMin, latMin, lngMax, latMax]`
-
-Returns **[Object][19]** nextState
+-   `state`  
+-   `action`  
 
 ### INITIAL_MAP_STATE
 
 Default initial `mapState`
 
-#### Properties
-
--   `pitch` **[number][21]** Default: `0`
--   `bearing` **[number][21]** Default: `0`
--   `latitude` **[number][21]** Default: `37.75043`
--   `longitude` **[number][21]** Default: `-122.34679`
--   `zoom` **[number][21]** Default: `9`
--   `dragRotate` **[boolean][22]** Default: `false`
--   `width` **[number][21]** Default: `800`
--   `height` **[number][21]** Default: `800`
--   `isSplit` **[boolean][22]** Default: `false`
+Type: MapState
 
 ### receiveMapConfigUpdater
 
 Update `mapState` to propagate a new config
 
--   **Action**: [`receiveMapConfig`][23]
+-   **Action**: [`receiveMapConfig`][18]
 
 **Parameters**
 
--   `state` **[Object][19]** 
--   `action` **[Object][19]** 
-    -   `action.payload` **[Object][19]** saved map config
-    -   `action.payload.config`   (optional, default `{}`)
-    -   `action.payload.options`   (optional, default `{}`)
-    -   `action.payload.bounds`   (optional, default `null`)
-
-Returns **[Object][19]** nextState
+-   `state`  
+-   `$1` **[Object][19]** 
+    -   `$1.payload.config`   (optional, default `{}`)
+    -   `$1.payload.options`   (optional, default `{}`)
+    -   `$1.payload.bounds`   (optional, default `null`)
 
 ### resetMapConfigUpdater
 
 reset mapState to initial State
 
--   **Action**: [`resetMapConfig`][24]
+-   **Action**: [`resetMapConfig`][20]
 
 **Parameters**
 
--   `state` **[Object][19]** `mapState`
-
-Returns **[Object][19]** nextState
+-   `state`  
 
 ### togglePerspectiveUpdater
 
 Toggle between 3d and 2d map.
 
--   **Action**: [`togglePerspective`][25]
+-   **Action**: [`togglePerspective`][21]
 
 **Parameters**
 
--   `state` **[Object][19]** 
-
-Returns **[Object][19]** nextState
+-   `state`  
 
 ### toggleSplitMapUpdater
 
 Toggle between one or split maps
 
--   **Action**: [`toggleSplitMap`][26]
+-   **Action**: [`toggleSplitMap`][22]
 
 **Parameters**
 
--   `state` **[Object][19]** 
-
-Returns **[Object][19]** nextState
+-   `state`  
 
 ### updateMapUpdater
 
 Update map viewport
 
--   **Action**: [`updateMap`][27]
+-   **Action**: [`updateMap`][23]
 
 **Parameters**
 
--   `state` **[Object][19]** 
--   `action` **[Object][19]** 
-    -   `action.payload` **[Object][19]** viewport
-
-Returns **[Object][19]** nextState
+-   `state`  
+-   `action`  
 
 [1]: #mapstateupdaters
 
@@ -156,46 +131,38 @@ Returns **[Object][19]** nextState
 
 [5]: #initial_map_state
 
-[6]: #properties
+[6]: #receivemapconfigupdater
 
-[7]: #receivemapconfigupdater
+[7]: #parameters-1
 
-[8]: #parameters-1
+[8]: #resetmapconfigupdater
 
-[9]: #resetmapconfigupdater
+[9]: #parameters-2
 
-[10]: #parameters-2
+[10]: #toggleperspectiveupdater
 
-[11]: #toggleperspectiveupdater
+[11]: #parameters-3
 
-[12]: #parameters-3
+[12]: #togglesplitmapupdater
 
-[13]: #togglesplitmapupdater
+[13]: #parameters-4
 
-[14]: #parameters-4
+[14]: #updatemapupdater
 
-[15]: #updatemapupdater
+[15]: #parameters-5
 
-[16]: #parameters-5
+[16]: ../advanced-usage/using-updaters.md
 
-[17]: ../advanced-usage/using-updaters.md
+[17]: ../actions/actions.md#fitbounds
 
-[18]: ../actions/actions.md#fitbounds
+[18]: ../actions/actions.md#receivemapconfig
 
 [19]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[20]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[20]: ../actions/actions.md#resetmapconfig
 
-[21]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[21]: ../actions/actions.md#toggleperspective
 
-[22]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[22]: ../actions/actions.md#togglesplitmap
 
-[23]: ../actions/actions.md#receivemapconfig
-
-[24]: ../actions/actions.md#resetmapconfig
-
-[25]: ../actions/actions.md#toggleperspective
-
-[26]: ../actions/actions.md#togglesplitmap
-
-[27]: ../actions/actions.md#updatemap
+[23]: ../actions/actions.md#updatemap

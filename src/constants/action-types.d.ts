@@ -52,7 +52,7 @@ export type ActionType = {
   COPY_TABLE_COLUMN: string;
   NEXT_FILE_BATCH: string;
   PROCESS_FILE_CONTENT: string;
-  
+
   // mapState
   UPDATE_MAP: string;
   FIT_BOUNDS: string;
@@ -85,7 +85,7 @@ export type ActionType = {
 
   // uiState > export image
   SET_EXPORT_IMAGE_SETTING: string;
-  START_EXPORTING_IMAGE: string;
+  SET_EXPORTING_IMAGE: string;
   SET_EXPORT_IMAGE_DATA_URI: string;
   SET_EXPORT_IMAGE_ERROR: string;
   CLEANUP_EXPORT_IMAGE: string;

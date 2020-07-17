@@ -36,7 +36,8 @@ const propTypes = {
   height: PropTypes.number.isRequired,
   exportImageSetting: PropTypes.object.isRequired,
   addNotification: PropTypes.func.isRequired,
-  mapFields: PropTypes.object.isRequired
+  mapFields: PropTypes.object.isRequired,
+  setExportingImage: PropTypes.func.isRequired
 };
 
 PlotContainerFactory.deps = [MapContainerFactory];
@@ -66,7 +67,7 @@ export default function PlotContainerFactory(MapContainer) {
     }
 
     componentDidMount() {
-      this.props.startExportingImage();
+      this.props.setExportingImage();
     }
 
     componentDidUpdate(prevProps) {
@@ -118,7 +119,7 @@ export default function PlotContainerFactory(MapContainer) {
 
     _retrieveNewScreenshot = () => {
       if (this.plottingAreaRef.current) {
-        this.props.startExportingImage();
+        this.props.setExportingImage();
         const filter = node => node.className !== 'mapboxgl-control-container';
 
         convertToPng(this.plottingAreaRef.current, {filter})
@@ -139,6 +140,7 @@ export default function PlotContainerFactory(MapContainer) {
         width: imageSize.imageW || 1,
         height: imageSize.imageH || 1
       };
+
       const scale = this.mapScaleSelector(this.props);
       const mapProps = {
         ...mapFields,

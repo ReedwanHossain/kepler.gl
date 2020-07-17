@@ -129,9 +129,9 @@ export function setExportImageSettingUpdater(
   state: UiState,
   action: UiStateActions.SetExportImageSettingUpdaterAction
 ): UiState;
-export function startExportingImageUpdater(
+export function setExportingImageUpdater(
   state: UiState,
-  action: UiStateActions.StartExportingImageUpdaterAction
+  action: UiStateActions.SetExportingImageUpdaterAction
 ): UiState;
 export function setExportImageDataUriUpdater(
   state: UiState,

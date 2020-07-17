@@ -119,10 +119,10 @@ export const setExportImageSetting = createAction(
 /**
  * Set `exportImage.exporting` to true
  * @memberof uiStateActions
- * @type {typeof import('./ui-state-actions').startExportingImage}
+ * @type {typeof import('./ui-state-actions').setExportingImage}
  * @public
  */
-export const startExportingImage = createAction(ActionTypes.START_EXPORTING_IMAGE);
+export const setExportingImage = createAction(ActionTypes.SET_EXPORTING_IMAGE);
 
 /**
  * Set `exportImage.setExportImageDataUri` to a dataUri
