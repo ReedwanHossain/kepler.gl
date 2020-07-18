@@ -19,9 +19,8 @@
 // THE SOFTWARE.
 
 // libraries
-import React, {Component, createRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {createSelector} from 'reselect';
 import styled from 'styled-components';
 import {StaticMap} from 'react-map-gl';
 import debounce from 'lodash.debounce';
@@ -30,6 +29,11 @@ import MapContainerFactory from './map-container';
 import {convertToPng} from 'utils/export-utils';
 import {scaleMapStyleByResolution} from 'utils/map-style-utils/mapbox-gl-style-editor';
 import {getScaleFromImageSize} from 'utils/export-utils';
+
+const DEBOUNCE_DELAY_MS = 500;
+const OUT_OF_SCREEN_POSITION = -9999;
+
+const ELEMENT_FILTER_FUNC = node => node.className !== 'mapboxgl-control-container';
 
 const propTypes = {
   width: PropTypes.number.isRequired,
@@ -49,7 +53,16 @@ const StyledPlotContainer = styled.div`
     display: none;
   }
 
+  top: ${props => props.positionY}px;
+  left: ${props => props.positionX}px;
+
   position: absolute;
+`;
+
+const StyledMapContainer = styled.div`
+  width: ${({size = {}}) => size.width}px;
+  height: ${({size = {}}) => size.height}px;
+  display: flex;
 `;
 
 const deckGlProps = {
@@ -60,144 +73,136 @@ const deckGlProps = {
 };
 
 export default function PlotContainerFactory(MapContainer) {
-  class PlotContainer extends Component {
-    constructor(props) {
-      super(props);
-      this._onMapRender = debounce(this._onMapRender, 500);
-    }
+  const PlotContainer = React.memo(
+    ({
+      exportImageSetting,
+      mapFields,
+      splitMaps,
+      setExportingImage,
+      setExportImageDataUri,
+      setExportImageError,
+      addNotification
+    }) => {
+      const {imageSize = {}, legend, ratio, resolution} = exportImageSetting;
+      const {mapState, mapStyle} = mapFields;
+      const isSplit = useMemo(() => splitMaps && splitMaps.length > 1, [splitMaps]);
 
-    componentDidMount() {
-      this.props.setExportingImage();
-    }
-
-    componentDidUpdate(prevProps) {
-      // re-fetch the new screenshot only when ratio legend or resolution changes
-      const checks = ['ratio', 'resolution', 'legend'];
-      const shouldRetrieveScreenshot = checks.some(
-        item => this.props.exportImageSetting[item] !== prevProps.exportImageSetting[item]
-      );
-      if (shouldRetrieveScreenshot) {
-        this._retrieveNewScreenshot();
-      }
-    }
-
-    plottingAreaRef = createRef();
-
-    mapStyleSelector = props => props.mapFields.mapStyle;
-    mapScaleSelector = props => {
-      const {imageSize} = props.exportImageSetting;
-      const {mapState} = props.mapFields;
-      if (imageSize.scale) {
-        return imageSize.scale;
-      }
-
-      const scale = getScaleFromImageSize(
-        imageSize.imageW,
-        imageSize.imageH,
-        mapState.width * (mapState.isSplit ? 2 : 1),
-        mapState.height
+      const size = useMemo(
+        () => ({
+          width: imageSize.imageW || 1,
+          height: imageSize.imageH || 1
+        }),
+        [imageSize.imageW, imageSize.imageH]
       );
 
-      return scale > 0 ? scale : 1;
-    };
+      const scale = useMemo(() => {
+        if (imageSize.scale) {
+          return imageSize.scale;
+        }
 
-    scaledMapStyleSelector = createSelector(
-      this.mapStyleSelector,
-      this.mapScaleSelector,
-      (mapStyle, scale) => ({
-        ...mapStyle,
-        bottomMapStyle: scaleMapStyleByResolution(mapStyle.bottomMapStyle, scale),
-        topMapStyle: scaleMapStyleByResolution(mapStyle.topMapStyle, scale)
-      })
-    );
+        const tmpScale = getScaleFromImageSize(
+          imageSize.imageW,
+          imageSize.imageH,
+          mapState.width * (mapState.isSplit ? 2 : 1),
+          mapState.height
+        );
 
-    _onMapRender = map => {
-      if (map.isStyleLoaded()) {
-        this._retrieveNewScreenshot();
-      }
-    };
+        return tmpScale > 0 ? tmpScale : 1;
+      }, [imageSize, mapState]);
 
-    _retrieveNewScreenshot = () => {
-      if (this.plottingAreaRef.current) {
-        this.props.setExportingImage();
-        const filter = node => node.className !== 'mapboxgl-control-container';
+      const plottingAreaRef = useRef();
 
-        convertToPng(this.plottingAreaRef.current, {filter})
-          .then(this.props.setExportImageDataUri)
-          .catch(err => {
-            this.props.setExportImageError(err);
-            this.props.addNotification(exportImageError({err}));
-          });
-      }
-    };
+      const retrieveNewScreenShot = useCallback(() => {
+        if (plottingAreaRef.current) {
+          setExportingImage();
+          convertToPng(plottingAreaRef.current, {filter: ELEMENT_FILTER_FUNC})
+            .then(setExportImageDataUri)
+            .catch(err => {
+              setExportImageError(err);
+              addNotification(exportImageError({err}));
+            });
+        }
+      }, [setExportingImage, plottingAreaRef.current]);
 
-    render() {
-      const {exportImageSetting, mapFields, splitMaps} = this.props;
-      const {imageSize = {}, legend} = exportImageSetting;
-      const isSplit = splitMaps && splitMaps.length > 1;
-
-      const size = {
-        width: imageSize.imageW || 1,
-        height: imageSize.imageH || 1
-      };
-
-      const scale = this.mapScaleSelector(this.props);
-      const mapProps = {
-        ...mapFields,
-        mapStyle: this.scaledMapStyleSelector(this.props),
-
-        // override viewport based on export settings
-        mapState: {
-          ...mapFields.mapState,
-          width: size.width / (isSplit ? 2 : 1),
-          height: size.height,
-          zoom: mapFields.mapState.zoom + (Math.log2(scale) || 0)
-        },
-        mapControls: {
-          // override map legend visibility
-          mapLegend: {
-            show: legend,
-            active: true
-          }
-        },
-        MapComponent: StaticMap,
-        onMapRender: this._onMapRender,
-        isExport: true,
-        deckGlProps
-      };
-
-      const mapContainers = !isSplit ? (
-        <MapContainer index={0} {...mapProps} />
-      ) : (
-        splitMaps.map((settings, index) => (
-          <MapContainer
-            key={index}
-            index={index}
-            {...mapProps}
-            mapLayers={splitMaps[index].layers}
-          />
-        ))
+      const onMapRender = debounce(
+        useCallback(
+          map => {
+            if (map.isStyledLoaded()) {
+              retrieveNewScreenShot();
+            }
+          },
+          [retrieveNewScreenShot]
+        ),
+        DEBOUNCE_DELAY_MS
       );
+
+      const mapProps = useMemo(
+        () => ({
+          ...mapFields,
+          mapStyle: {
+            ...mapStyle,
+            bottomMapStyle: scaleMapStyleByResolution(mapStyle.bottomMapStyle, scale),
+            topMapStyle: scaleMapStyleByResolution(mapStyle.topMapStyle, scale)
+          },
+
+          // override viewport based on export settings
+          mapState: {
+            ...mapState,
+            width: size.width / (isSplit ? 2 : 1),
+            height: size.height,
+            zoom: mapState.zoom + (Math.log2(scale) || 0)
+          },
+          mapControls: {
+            // override map legend visibility
+            mapLegend: {
+              show: legend,
+              active: true
+            }
+          },
+          MapComponent: StaticMap,
+          onMapRender,
+          isExport: true,
+          deckGlProps
+        }),
+        [mapFields, scale, size, isSplit, mapState, mapStyle, mapStyle.bottomMapStyle, mapStyle.topMapStyle, onMapRender]
+      );
+
+      const mapContainers = useMemo(() => {
+        return !isSplit ? (
+          <MapContainer index={0} {...mapProps} />
+        ) : (
+          splitMaps.map((settings, index) => (
+            <MapContainer
+              key={index}
+              index={index}
+              {...mapProps}
+              mapLayers={splitMaps[index].layers}
+            />
+          ))
+        );
+      }, [mapProps, splitMaps, isSplit]);
+
+      useEffect(() => {
+        setExportingImage();
+      }, []);
+
+      useEffect(() => {
+        retrieveNewScreenShot();
+      }, [ratio, resolution, legend]);
 
       return (
         <StyledPlotContainer
-          style={{position: 'absolute', top: -9999, left: -9999}}
+          positionX={OUT_OF_SCREEN_POSITION}
+          positionY={OUT_OF_SCREEN_POSITION}
           className="export-map-instance"
         >
-          <div
-            ref={this.plottingAreaRef}
-            style={{
-              width: `${size.width}px`,
-              height: `${size.height}px`,
-              display: 'flex'
-            }}
-          >
+          <StyledMapContainer ref={plottingAreaRef} size={size}>
             {mapContainers}
-          </div>
+          </StyledMapContainer>
         </StyledPlotContainer>
       );
     }
-  }
+  );
 
   PlotContainer.propsTypes = propTypes;
   return PlotContainer;
